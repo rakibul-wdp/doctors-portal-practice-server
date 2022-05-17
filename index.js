@@ -19,7 +19,14 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    console.log('Database connected');
+    const serviceCollection = client.db('doctors_practice').collection('services');
+
+    app.get('/service', async (req, res) => {
+      const query = {};
+      const cursor = serviceCollection.find(query);
+      const services = await cursor.toArray();
+      res.send(services);
+    });
   } finally {
     // some type of code that stop this function
   }
